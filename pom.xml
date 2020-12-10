@@ -73,11 +73,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <junit.vintage.version>5.4.2</junit.vintage.version>
-        <junit-platform.version>1.2.0</junit-platform.version>
-        <junit-jupiter.version>5.4.2</junit-jupiter.version>
-    </properties>
-
 </project>
