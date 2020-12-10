@@ -38,7 +38,7 @@ public class AirplaneGenerator implements Runnable {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException interruptedException) {
-                logger.error("Exception in com.mediasoft.airport.AirplaneGenerator: [{}]", interruptedException.getMessage(), interruptedException);
+                logger.error("Exception in AirplaneGenerator: [{}]", interruptedException.getMessage(), interruptedException);
             }
         }
     }

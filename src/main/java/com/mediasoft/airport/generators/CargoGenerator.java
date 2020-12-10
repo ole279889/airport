@@ -32,7 +32,7 @@ public class CargoGenerator implements Runnable {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException interruptedException) {
-                logger.error("Exception in com.mediasoft.airport.CargoGenerator: [{}]", interruptedException.getMessage(), interruptedException);
+                logger.error("Exception in CargoGenerator: [{}]", interruptedException.getMessage(), interruptedException);
             }
         }
     }

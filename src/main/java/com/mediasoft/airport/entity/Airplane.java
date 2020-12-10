@@ -32,7 +32,7 @@ public class Airplane {
 
     public void loadCargo(Cargo cargo, CargoType loadType) throws AirplaneLoadingException {
         if (!isLoadingInProgress || isLoaded) {
-            throw new AirplaneLoadingException("Airplane is not ready to load cargo: loading not started or completed yet!");
+            throw new AirplaneLoadingException("Airplane is not ready to load cargo: loading has not been started or completed yet!");
         }
         switch (loadType) {
             case LIVE:
@@ -71,7 +71,7 @@ public class Airplane {
             isLoadingInProgress = false;
             isLoaded = true;
         } else {
-            throw new AirplaneLoadingException("Airplane is not ready to completed loading cargo: loading has not been started!");
+            throw new AirplaneLoadingException("Airplane is not ready to complete loading cargo: loading has not been started!");
         }
     }
 

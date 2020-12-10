@@ -24,7 +24,7 @@ public class AirplaneDisplacer implements Runnable {
                     airport.takeoff(airplane);
                 }
             } catch (InterruptedException interruptedException) {
-                logger.error("Exception in com.mediasoft.airport.AirplaneDisplacer: [{}]", interruptedException.getMessage(), interruptedException);
+                logger.error("Exception in AirplaneDisplacer: [{}]", interruptedException.getMessage(), interruptedException);
             }
         }
     }

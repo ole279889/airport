@@ -31,7 +31,7 @@ public class Airport {
                 wait();
             }
         } catch (InterruptedException interruptedException) {
-            logger.error("Exception in com.mediasoft.airport.Airport: [{}]", interruptedException.getMessage(), interruptedException);
+            logger.error("Exception in Airport: [{}]", interruptedException.getMessage(), interruptedException);
         }
     }
 
@@ -41,7 +41,7 @@ public class Airport {
                 notifyAll();
                 for (Airplane airplane : landed) {
                     if (airplane.isLoaded()) {
-                        logger.info("Airplane " + airplane.toString() + " IS READY TO TAKEOFF!");
+                        logger.info("Airplane " + airplane.toString() + " is ready to take off!");
                         return airplane;
                     }
                 }
@@ -50,7 +50,7 @@ public class Airport {
                 wait();
             }
         } catch (InterruptedException interruptedException) {
-            logger.error("Exception in com.mediasoft.airport.Airport: [{}]", interruptedException.getMessage(), interruptedException);
+            logger.error("Exception in Airport: [{}]", interruptedException.getMessage(), interruptedException);
         }
         return null;
     }
@@ -61,7 +61,7 @@ public class Airport {
                 notifyAll();
                 for (Airplane airplane : landed) {
                     if (!airplane.isLoaded() && !airplane.isLoadingInProgress()) {
-                        logger.info("Airplane " + airplane.toString() + " IS READY TO LOAD!");
+                        logger.info("Airplane " + airplane.toString() + " is ready to load!");
                         return airplane;
                     }
                 }
@@ -70,7 +70,7 @@ public class Airport {
                 wait();
             }
         } catch (InterruptedException interruptedException) {
-            logger.error("Exception in com.mediasoft.airport.Airport: [{}]", interruptedException.getMessage(), interruptedException);
+            logger.error("Exception in Airport: [{}]", interruptedException.getMessage(), interruptedException);
         }
         return null;
     }
@@ -87,7 +87,7 @@ public class Airport {
                 wait();
             }
         } catch (InterruptedException interruptedException) {
-            logger.error("Exception in com.mediasoft.airport.Airport: [{}]", interruptedException.getMessage(), interruptedException);
+            logger.error("Exception in Airport: [{}]", interruptedException.getMessage(), interruptedException);
         }
     }
 }
