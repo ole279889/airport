@@ -5,7 +5,11 @@
         </encoder>
     </appender>
 
-    <root level="debug">
+    <logger name="com.mediasoft.airport" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root level="error">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

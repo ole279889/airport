@@ -19,22 +19,20 @@ public class Airport {
         this.landed = new ArrayList<>();
     }
 
-    public synchronized boolean land(Airplane airplane) {
+    public synchronized void land(Airplane airplane) {
         try {
             if(AirplanesCounter < maxAirplanesInPort) {
                 notifyAll();
                 landed.add(airplane);
-                logger.debug("Landed airplane: " + airplane.toString());
+                logger.info("Landed airplane: " + airplane.toString());
                 AirplanesCounter++;
             } else {
-                logger.debug("No place to land airplane: " + airplane.toString());
+                logger.info("No place to land airplane: " + airplane.toString());
                 wait();
-                return false;
             }
         } catch (InterruptedException interruptedException) {
-            interruptedException.printStackTrace();
+            logger.error("Exception in com.mediasoft.airport.Airport: [{}]", interruptedException.getMessage(), interruptedException);
         }
-        return true;
     }
 
     public synchronized Airplane getLoaded() {
@@ -43,16 +41,16 @@ public class Airport {
                 notifyAll();
                 for (Airplane airplane : landed) {
                     if (airplane.isLoaded()) {
-                        logger.debug("Airplane " + airplane.toString() + " IS READY TO TAKEOFF!");
+                        logger.info("Airplane " + airplane.toString() + " IS READY TO TAKEOFF!");
                         return airplane;
                     }
                 }
             } else {
-                logger.debug("There is no airplanes in the airport!");
+                logger.info("There is no airplanes in the airport!");
                 wait();
             }
         } catch (InterruptedException interruptedException) {
-            interruptedException.printStackTrace();
+            logger.error("Exception in com.mediasoft.airport.Airport: [{}]", interruptedException.getMessage(), interruptedException);
         }
         return null;
     }
@@ -63,23 +61,33 @@ public class Airport {
                 notifyAll();
                 for (Airplane airplane : landed) {
                     if (!airplane.isLoaded() && !airplane.isLoadingInProgress()) {
-                        logger.debug("Airplane " + airplane.toString() + " IS READY TO LOAD!");
+                        logger.info("Airplane " + airplane.toString() + " IS READY TO LOAD!");
                         return airplane;
                     }
                 }
             } else {
-                logger.debug("There is no airplanes in the airport!");
+                logger.info("There is no airplanes in the airport!");
                 wait();
             }
         } catch (InterruptedException interruptedException) {
-            interruptedException.printStackTrace();
+            logger.error("Exception in com.mediasoft.airport.Airport: [{}]", interruptedException.getMessage(), interruptedException);
         }
         return null;
     }
 
     public synchronized void takeoff(Airplane airplane) {
-        logger.debug("Takeoff airplane " + airplane.toString());
-        AirplanesCounter--;
-        landed.remove(airplane);
+        try {
+            if (AirplanesCounter > minAirplanesInPort) {
+                notifyAll();
+                logger.info("Takeoff airplane " + airplane.toString());
+                AirplanesCounter--;
+                landed.remove(airplane);
+            } else {
+                logger.info("There is no airplanes in the airport!");
+                wait();
+            }
+        } catch (InterruptedException interruptedException) {
+            logger.error("Exception in com.mediasoft.airport.Airport: [{}]", interruptedException.getMessage(), interruptedException);
+        }
     }
 }

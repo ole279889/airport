@@ -3,10 +3,12 @@ package com.mediasoft.airport;
 import com.mediasoft.airport.entity.Airplane;
 import com.mediasoft.airport.entity.Cargo;
 import com.mediasoft.airport.entity.CargoType;
+import com.mediasoft.airport.exception.AirplaneLoadingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CargoLoader implements Runnable {
+
     private static final Logger logger = LoggerFactory.getLogger(CargoLoader.class);
 
     private final CargoStock cargoStock;
@@ -24,22 +26,23 @@ public class CargoLoader implements Runnable {
                 Thread.sleep(300);
                 Airplane airplane = airport.getReadyToLoad();
                 if (airplane != null) {
-                    airplane.setLoadingInProgress(true);
+                    airplane.setLoadingStart();
                     loadLiveCargo(airplane);
                     loadPerishableCargo(airplane);
                     loadDangerousCargo(airplane);
                     loadRegularCargo(airplane);
-                    airplane.setLoaded();
-                    airplane.setLoadingInProgress(false);
-                    logger.debug("Loaded airplane " + airplane.toString());
+                    airplane.setLoadingFinish();
+                    logger.info("Loaded airplane " + airplane.toString());
                 }
+            } catch (AirplaneLoadingException airplaneLoadingException) {
+                logger.error("Exception in com.mediasoft.airport.CargoLoader: [{}]", airplaneLoadingException.getMessage(), airplaneLoadingException);
             } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
+                logger.error("Exception in com.mediasoft.airport.CargoLoader: [{}]", interruptedException.getMessage(), interruptedException);
             }
         }
     }
 
-    private void loadLiveCargo(Airplane airplane) throws InterruptedException {
+    private void loadLiveCargo(Airplane airplane) throws InterruptedException, AirplaneLoadingException {
         Cargo cargo = cargoStock.getCargo(CargoType.LIVE, airplane.getTargetAirport(), airplane.getLiveCargoFreeSpace());
         addCargoLoggerReport(airplane.getLiveCargoFreeSpace(), cargo);
         while (cargo != null) {
@@ -50,7 +53,7 @@ public class CargoLoader implements Runnable {
         }
     }
 
-    private void loadPerishableCargo(Airplane airplane) throws InterruptedException {
+    private void loadPerishableCargo(Airplane airplane) throws InterruptedException, AirplaneLoadingException {
         Cargo cargo = cargoStock.getCargo(CargoType.PERISHABLE, airplane.getTargetAirport(), airplane.getPerishableCargoFreeSpace());
         addCargoLoggerReport(airplane.getPerishableCargoFreeSpace(), cargo);
         while (cargo != null) {
@@ -61,7 +64,7 @@ public class CargoLoader implements Runnable {
         }
     }
 
-    private void loadDangerousCargo(Airplane airplane) throws InterruptedException {
+    private void loadDangerousCargo(Airplane airplane) throws InterruptedException, AirplaneLoadingException {
         Cargo cargo = cargoStock.getCargo(CargoType.DANGEROUS, airplane.getTargetAirport(), airplane.getRegularCargoFreeSpace());
         addCargoLoggerReport(airplane.getRegularCargoFreeSpace(), cargo);
         while (cargo != null) {
@@ -72,7 +75,7 @@ public class CargoLoader implements Runnable {
         }
     }
 
-    private void loadRegularCargo(Airplane airplane) throws InterruptedException {
+    private void loadRegularCargo(Airplane airplane) throws InterruptedException, AirplaneLoadingException {
         Cargo cargo = cargoStock.getCargo(CargoType.REGULAR, airplane.getTargetAirport(), airplane.getRegularCargoFreeSpace());
         addCargoLoggerReport(airplane.getRegularCargoFreeSpace(), cargo);
         while (cargo != null) {
@@ -84,8 +87,8 @@ public class CargoLoader implements Runnable {
     }
 
     private void addCargoLoggerReport(int freeSpace, Cargo cargo) {
-        logger.debug("free space: " + freeSpace);
-        logger.debug(cargo == null ? "No cargo found" : "ADDING cargo: " + cargo.toString());
+        logger.info("free space: " + freeSpace);
+        logger.info(cargo == null ? "No cargo found" : "ADDING cargo: " + cargo.toString());
     }
 
 }

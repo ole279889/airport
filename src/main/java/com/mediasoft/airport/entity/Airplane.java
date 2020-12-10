@@ -1,10 +1,13 @@
 package com.mediasoft.airport.entity;
 
+import com.mediasoft.airport.exception.AirplaneLoadingException;
+
 public class Airplane {
     private final int perishableCargoCapacity; // вместимость скоропортящийся
     private final int liveCargoCapacity; // вместимость живой
     private final int regularCargoCapacity; // вместимость обычный и опасный
     private final Airports targetAirport;
+    private final int tailNumber;
 
     private volatile boolean isLoadingInProgress = false;
     private volatile boolean isLoaded = false;
@@ -17,15 +20,20 @@ public class Airplane {
             int perishableCargoCapacity,
             int liveCargoCapacity,
             int regularCargoCapacity,
-            Airports targetAirport
+            Airports targetAirport,
+            int tailNumber
     ) {
         this.perishableCargoCapacity = perishableCargoCapacity;
         this.liveCargoCapacity = liveCargoCapacity;
         this.regularCargoCapacity = regularCargoCapacity;
         this.targetAirport = targetAirport;
+        this.tailNumber = tailNumber;
     }
 
-    public void loadCargo(Cargo cargo, CargoType loadType) {
+    public void loadCargo(Cargo cargo, CargoType loadType) throws AirplaneLoadingException {
+        if (!isLoadingInProgress || isLoaded) {
+            throw new AirplaneLoadingException("Airplane is not ready to load cargo: loading not started or completed yet!");
+        }
         switch (loadType) {
             case LIVE:
                 this.liveCargoCount += cargo.getSize();
@@ -46,16 +54,25 @@ public class Airplane {
         return isLoadingInProgress;
     }
 
-    public void setLoadingInProgress(boolean loadingInProgress) {
-        isLoadingInProgress = loadingInProgress;
-    }
-
     public boolean isLoaded() {
         return isLoaded;
     }
 
-    public void setLoaded() {
-        isLoaded = true;
+    public void setLoadingStart() throws AirplaneLoadingException {
+        if (!isLoaded) {
+            isLoadingInProgress = true;
+        } else {
+            throw new AirplaneLoadingException("Airplane is not ready to load cargo: loading completed yet!");
+        }
+    }
+
+    public void setLoadingFinish() throws AirplaneLoadingException {
+        if (isLoadingInProgress) {
+            isLoadingInProgress = false;
+            isLoaded = true;
+        } else {
+            throw new AirplaneLoadingException("Airplane is not ready to completed loading cargo: loading has not been started!");
+        }
     }
 
     public Airports getTargetAirport() {
@@ -77,7 +94,8 @@ public class Airplane {
     @Override
     public String toString() {
         return "Airplane{" +
-                "perishableCargoCapacity=" + perishableCargoCapacity +
+                "tailNumber=" + tailNumber +
+                ", perishableCargoCapacity=" + perishableCargoCapacity +
                 ", perishableCargoCount=" + perishableCargoCount +
                 ", liveCargoCapacity=" + liveCargoCapacity +
                 ", liveCargoCount=" + liveCargoCount +

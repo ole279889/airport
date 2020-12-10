@@ -4,10 +4,14 @@ import com.mediasoft.airport.CargoStock;
 import com.mediasoft.airport.entity.Airports;
 import com.mediasoft.airport.entity.Cargo;
 import com.mediasoft.airport.entity.CargoType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
 public class CargoGenerator implements Runnable {
+
+    private static final Logger logger = LoggerFactory.getLogger(CargoGenerator.class);
 
     private final Random random = new Random();
     private final CargoStock stock;
@@ -28,7 +32,7 @@ public class CargoGenerator implements Runnable {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
+                logger.error("Exception in com.mediasoft.airport.CargoGenerator: [{}]", interruptedException.getMessage(), interruptedException);
             }
         }
     }

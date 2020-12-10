@@ -3,10 +3,13 @@ package com.mediasoft.airport.generators;
 import com.mediasoft.airport.Airport;
 import com.mediasoft.airport.entity.Airplane;
 import com.mediasoft.airport.entity.Airports;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Random;
 
 public class AirplaneGenerator implements Runnable {
+
+    private static final Logger logger = LoggerFactory.getLogger(AirplaneGenerator.class);
 
     private final Random random = new Random();
     private final Airport airport;
@@ -28,13 +31,14 @@ public class AirplaneGenerator implements Runnable {
                             getRandomCapacity(),
                             getRandomCapacity(),
                             getRandomCapacity() * 3,
-                            getRandomAirport()
+                            getRandomAirport(),
+                            count
                     )
             );
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
+                logger.error("Exception in com.mediasoft.airport.AirplaneGenerator: [{}]", interruptedException.getMessage(), interruptedException);
             }
         }
     }
