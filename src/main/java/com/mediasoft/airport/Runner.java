@@ -12,7 +12,7 @@ public class Runner {
         CargoStock cargoStock = new CargoStock();
         AirplaneGenerator airplaneGenerator = new AirplaneGenerator(airport, 20);
         CargoGenerator cargoGenerator = new CargoGenerator(cargoStock, 500);
-        AirplaneDisplacer airplaneDisplacer = new AirplaneDisplacer(airport);
+        AirplaneDispatcher airplaneDisplacer = new AirplaneDispatcher(airport);
         CargoLoader cargoLoaderFirst = new CargoLoader(airport, cargoStock);
         CargoLoader cargoLoaderSecond = new CargoLoader(airport, cargoStock);
 

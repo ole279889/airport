@@ -4,13 +4,13 @@ import com.mediasoft.airport.entity.Airplane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AirplaneDisplacer implements Runnable {
+public class AirplaneDispatcher implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(AirplaneDisplacer.class);
+    private static final Logger logger = LoggerFactory.getLogger(AirplaneDispatcher.class);
 
     private final Airport airport;
 
-    public AirplaneDisplacer(Airport airport) {
+    public AirplaneDispatcher(Airport airport) {
         this.airport = airport;
     }
 
@@ -24,7 +24,7 @@ public class AirplaneDisplacer implements Runnable {
                     airport.takeoff(airplane);
                 }
             } catch (InterruptedException interruptedException) {
-                logger.error("Exception in AirplaneDisplacer: [{}]", interruptedException.getMessage(), interruptedException);
+                logger.error("Exception in AirplaneDispatcher: [{}]", interruptedException.getMessage(), interruptedException);
             }
         }
     }
