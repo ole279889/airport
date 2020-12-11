@@ -59,10 +59,10 @@ public class Airplane {
     }
 
     public void setLoadingStart() throws AirplaneLoadingException {
-        if (!isLoaded) {
+        if (!isLoaded && !isLoadingInProgress) {
             isLoadingInProgress = true;
         } else {
-            throw new AirplaneLoadingException("Airplane is not ready to load cargo: loading completed yet!");
+            throw new AirplaneLoadingException("Airplane is not ready to load cargo: loading loading has been started or completed yet!");
         }
     }
 
